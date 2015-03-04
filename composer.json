@@ -1,0 +1,23 @@
+{
+	"name": "jimmygle/homesteader",
+	"description": "A laravel homestead config manager.",
+	"version": "0.1.0",
+	"bin": ["homesteader"],
+	"require": {
+		"php": ">=5.4",
+		"symfony/console": "~2.0",
+		"symfony/yaml": "3.0.*@dev"
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jimmy Gleason",
+			"email": "jimmygle@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Homesteader\\": "src/"
+		}
+	}
+}
