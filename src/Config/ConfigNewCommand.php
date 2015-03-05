@@ -42,7 +42,7 @@ class ConfigNewCommand extends Command {
 				$this->newVariable();
 				break;
 			default:
-				$this->output->write('<error>Invalid entry!</error>');
+				$this->output->writeln('<error>Invalid entry!</error>');
 				break;
 		}
 	}
@@ -54,10 +54,10 @@ class ConfigNewCommand extends Command {
 		$hostFolderPrompt = new Question('Path to host machine (not Homestead) directory: ');
 		$hostFolder = $helper->ask($this->input, $this->output, $hostFolderPrompt);
 
-		$guestFolderPrompt = new Question('Path to guest\'s (Homestead) directory: ');
-		$guestFolder = $helper->ask($this->input, $this->output, $guestFolderPrompt);
+		$homesteadFolderPrompt = new Question("Path to internal Homestead directory: ");
+		$homesteadFolder = $helper->ask($this->input, $this->output, $homesteadFolderPrompt);
 
-		$this->output->writeln("About to sync <info>{$hostFolder}</info> to <info>{$guestFolder}</info>.");
+		$this->output->writeln("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info>.");
 		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
 		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
 			return;
@@ -65,16 +65,46 @@ class ConfigNewCommand extends Command {
 
 		$this->homesteadConfig->addTo('folders', [
 			'map' => $hostFolder,
-			'to' => $guestFolder
+			'to' => $homesteadFolder
 		]);
 
 		try {
 			$this->homesteadConfig->save();
 		} catch (Exception $e) {
-			$this->output->write("<error>{$e->getMessage()}</error>");
+			$this->output->writeln("<error>{$e->getMessage()}</error>");
 		}
 
-		$this->output->write('<info>Homestead config file successfully updated.</info>');
+		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
+	}
+
+	protected function newSite()
+	{
+		$helper = $this->getHelper('question');
+
+		$domainNamePrompt = new Question('Domain name: ');
+		$domainName = $helper->ask($this->input, $this->output, $domainNamePrompt);
+
+		$homesteadWebRootPrompt = new Question('Path to web root in Homestead: ');
+		$homesteadWebRoot = $helper->ask($this->input, $this->output, $homesteadWebRootPrompt);
+
+		$this->output->writeln("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead.");
+		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
+		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
+			return;
+		}
+
+		$this->homesteadConfig->addTo('sites', [
+			'map' => $domainName,
+			'to' => $homesteadWebRoot
+		]);
+
+		try {
+			$this->homesteadConfig->save();
+		} catch (Exception $e) {
+			$this->output->writeln("<error>{$e->getMessage()}</error>");
+		}
+
+		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
 	}
 
 }
