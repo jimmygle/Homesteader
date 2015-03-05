@@ -57,7 +57,7 @@ class ConfigNewCommand extends Command {
 		$homesteadFolderPrompt = new Question("Path to internal Homestead directory: ");
 		$homesteadFolder = $helper->ask($this->input, $this->output, $homesteadFolderPrompt);
 
-		$this->output->writeln("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info>.");
+		$this->output->writeln("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info> in Homestead config.");
 		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
 		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
 			return;
@@ -87,7 +87,7 @@ class ConfigNewCommand extends Command {
 		$homesteadWebRootPrompt = new Question('Path to web root in Homestead: ');
 		$homesteadWebRoot = $helper->ask($this->input, $this->output, $homesteadWebRootPrompt);
 
-		$this->output->writeln("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead.");
+		$this->output->writeln("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead config.");
 		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
 		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
 			return;
@@ -97,6 +97,30 @@ class ConfigNewCommand extends Command {
 			'map' => $domainName,
 			'to' => $homesteadWebRoot
 		]);
+
+		try {
+			$this->homesteadConfig->save();
+		} catch (Exception $e) {
+			$this->output->writeln("<error>{$e->getMessage()}</error>");
+		}
+
+		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
+	}
+
+	protected function newDatabase()
+	{
+		$helper = $this->getHelper('question');
+
+		$databaseNamePrompt = new Question('Database name: ');
+		$databaseName = $helper->ask($this->input, $this->output, $databaseNamePrompt);
+
+		$this->output->writeln("About to add <info>{$databaseName}</info> to Homestead config.");
+		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
+		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
+			return;
+		}
+
+		$this->homesteadConfig->addTo('databases', $databaseName);
 
 		try {
 			$this->homesteadConfig->save();
