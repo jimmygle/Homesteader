@@ -103,7 +103,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * Add new variables config set to config file
 	 *
 	 * Command:
-	 * homesteader config:new var|variables
+	 * homesteader config:new var|variable
 	 *
 	 * @return  void
 	 */
