@@ -29,10 +29,10 @@ class ConfigNewCommand extends Command {
 		
 		switch ($input->getArgument('key')) {
 			case 'folder':
-				$this->newFolders();
+				$this->newFolder();
 				break;
 			case 'site':
-				$this->newSites();
+				$this->newSite();
 				break;
 			case 'database':
 				$this->newDatabase();
@@ -46,7 +46,7 @@ class ConfigNewCommand extends Command {
 		}
 	}
 
-	protected function newFolders()
+	protected function newFolder()
 	{
 		$helper = $this->getHelper('question');
 
