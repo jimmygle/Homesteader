@@ -38,7 +38,7 @@ class ConfigNewCommand extends Command {
 			case 'database':
 				$this->newDatabase();
 				break;
-			case 'variable':
+			case ('variable' || 'var'):
 				$this->newVariable();
 				break;
 			default:
@@ -121,6 +121,36 @@ class ConfigNewCommand extends Command {
 		}
 
 		$this->homesteadConfig->addTo('databases', $databaseName);
+
+		try {
+			$this->homesteadConfig->save();
+		} catch (Exception $e) {
+			$this->output->writeln("<error>{$e->getMessage()}</error>");
+		}
+
+		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
+	}
+
+	protected function newVariable()
+	{
+		$helper = $this->getHelper('question');
+
+		$variableKeyPrompt = new Question('Variable key: ');
+		$variableKey = $helper->ask($this->input, $this->output, $variableKeyPrompt);
+
+		$variableValuePrompt = new Question('Variable value: ');
+		$variableValue = $helper->ask($this->input, $this->output, $variableValuePrompt);
+
+		$this->output->writeln("About to add environmental variable <info>{$variableKey}</info> = <info>{$variableValue}</info> in Homestead config.");
+		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
+		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
+			return;
+		}
+
+		$this->homesteadConfig->addTo('variables', [
+			'key' => $variableKey,
+			'value' => $variableValue
+		]);
 
 		try {
 			$this->homesteadConfig->save();
