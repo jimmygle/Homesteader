@@ -5,9 +5,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Yaml\Yaml;
+use Homesteader\Config\HomesteadConfig;
 
 class ConfigListCommand extends Command {
 	
+	protected $homesteadConfig;
+
 	protected function configure()
 	{
 		$this->setName('config:list')->setDescription('List current Homestead config settings.');
@@ -15,11 +18,11 @@ class ConfigListCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$rawConfig = file_get_contents('/Users/jimmygle/.homestead/Homestead.yaml');
-		$configContents = Yaml::parse($rawConfig);
+		$this->homesteadConfig = new HomesteadConfig;
+
 		$table = (new Table($output));
 		$tableRows = [];
-		foreach ($configContents as $configKey => $configValue) {
+		foreach ($this->homesteadConfig->asArray() as $configKey => $configValue) {
 			$tableRow = [$configKey];
 			if (is_array($configValue)) {
 				$tableCell = '';

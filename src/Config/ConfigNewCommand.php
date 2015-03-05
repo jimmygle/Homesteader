@@ -7,12 +7,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Yaml\Yaml;
 
 class ConfigNewCommand extends Command {
 
 	protected $input;
 	protected $output;
+	protected $homesteadConfig;
 
 	protected function configure()
 	{
@@ -26,6 +26,7 @@ class ConfigNewCommand extends Command {
 	{
 		$this->input = $input;
 		$this->output = $output;
+		$this->homesteadConfig = new HomesteadConfig;
 		
 		switch ($input->getArgument('key')) {
 			case 'folder':
@@ -62,22 +63,18 @@ class ConfigNewCommand extends Command {
 			return;
 		}
 
-		$rawConfigFileContents = file_get_contents('/Users/jimmygle/.homestead/Homestead.yaml');
-		$parsedConfig = Yaml::parse($rawConfigFileContents);
-
-		$parsedConfig['folders'][] = [
+		$this->homesteadConfig->addTo('folders', [
 			'map' => $hostFolder,
 			'to' => $guestFolder
-		];
+		]);
 
-		$yamlConfig = Yaml::dump($parsedConfig, 3);
-		$configFileUpdated = file_put_contents('/Users/jimmygle/.homestead/Homestead.yaml', $yamlConfig);
-
-		if ($configFileUpdated) {
-			$this->output->write('<info>Homestead config file successfully updated.</info>');
-		} else {
-			$this->output->write('<error>Error updating the config file.</error>');
+		try {
+			$this->homesteadConfig->save();
+		} catch (Exception $e) {
+			$this->output->write("<error>{$e->getMessage()}</error>");
 		}
+
+		$this->output->write('<info>Homestead config file successfully updated.</info>');
 	}
 
 }
