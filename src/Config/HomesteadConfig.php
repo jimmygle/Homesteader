@@ -23,7 +23,7 @@ class HomesteadConfig {
 			$this->findConfigFile();
 		}
 		$this->checkConfigFileExists();
-		$this->parseConfigToArray();
+		$this->parseConfigFileToArray();
 	}
 
 	/**
@@ -53,6 +53,17 @@ class HomesteadConfig {
 	}
 
 	/**
+	 * Loads homestead config file into an array
+	 *
+	 * @return  void
+	 */
+	protected function parseConfigFileToArray()
+	{
+		$this->readConfigFile();
+		$this->config = Yaml::parse($this->configFileContents);
+	}
+
+	/**
 	 * Reads config file
 	 *
 	 * @return  void
@@ -66,17 +77,6 @@ class HomesteadConfig {
 		if ($this->configFileContents == false) {
 			throw new Exception("Contents of homestead config file are empty: {$this->configFilePath}");
 		}
-	}
-
-	/**
-	 * Loads homestead config file into an array
-	 *
-	 * @return  void
-	 */
-	protected function parseConfigToArray()
-	{
-		$this->readConfigFile();
-		$this->config = Yaml::parse($this->configFileContents);
 	}
 
 	/**
