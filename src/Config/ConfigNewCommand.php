@@ -1,33 +1,34 @@
 <?php namespace Homesteader\Config;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class ConfigNewCommand extends Command {
+class ConfigNewCommand extends ConfigCommand {
 
-	protected $input;
-	protected $output;
-	protected $homesteadConfig;
-
+	/**
+	 * Configure command
+	 *
+	 * @return  void
+	 */
 	protected function configure()
 	{
-		$this
-			->setName('config:new')
-			->setDescription('Add a new item to the Homestead config.')
-			->addArgument('key', InputArgument::OPTIONAL, 'Tpye of config to add.');
+		$this->setName('config:new');
+		$this->setDescription('Add a new item to the Homestead config.');
+		$this->addArgument('key', InputArgument::OPTIONAL, 'Tpye of config to add.');
 	}
 
+	/**
+	 * Initialize the command and determine which path to take
+	 *
+	 * @param  Symfony\Component\Console\Input\InputInterface
+	 * @param  Symfony\Component\Console\Output\OutputInterface
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$this->input = $input;
-		$this->output = $output;
-		$this->homesteadConfig = new HomesteadConfig;
+		parent::execute($input, $output);
 		
-		switch ($input->getArgument('key')) {
+		switch ($this->input->getArgument('key')) {
 			case 'folder':
 				$this->newFolder();
 				break;
@@ -46,19 +47,21 @@ class ConfigNewCommand extends Command {
 		}
 	}
 
+	/**
+	 * Add new folders config set to config file
+	 *
+	 * Command:
+	 * homesteader config:new folder
+	 *
+	 * @return  void
+	 */
 	protected function newFolder()
 	{
-		$helper = $this->getHelper('question');
+		$hostFolder = $this->prompt('Path to host machine (not Homestead) directory: ');
+		$homesteadFolder = $this->prompt('Path to internal Homestead directory: ');
 
-		$hostFolderPrompt = new Question('Path to host machine (not Homestead) directory: ');
-		$hostFolder = $helper->ask($this->input, $this->output, $hostFolderPrompt);
-
-		$homesteadFolderPrompt = new Question("Path to internal Homestead directory: ");
-		$homesteadFolder = $helper->ask($this->input, $this->output, $homesteadFolderPrompt);
-
-		$this->output->writeln("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info> in Homestead config.");
-		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
-		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
+		$changesConfirmed = $this->confirmChanges("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info> in Homestead config.");
+		if ($changesConfirmed === false) {
 			return;
 		}
 
@@ -67,28 +70,24 @@ class ConfigNewCommand extends Command {
 			'to' => $homesteadFolder
 		]);
 
-		try {
-			$this->homesteadConfig->save();
-		} catch (Exception $e) {
-			$this->output->writeln("<error>{$e->getMessage()}</error>");
-		}
-
-		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
+		$this->homesteadConfigSave();
 	}
 
+	/**
+	 * Add new sites config set to config file
+	 *
+	 * Command:
+	 * homesteader config:new site
+	 *
+	 * @return  void
+	 */
 	protected function newSite()
 	{
-		$helper = $this->getHelper('question');
+		$domainName = $this->prompt('Domain name: ');
+		$homesteadWebRoot = $this->prompt('Path to web root in Homestead: ');
 
-		$domainNamePrompt = new Question('Domain name: ');
-		$domainName = $helper->ask($this->input, $this->output, $domainNamePrompt);
-
-		$homesteadWebRootPrompt = new Question('Path to web root in Homestead: ');
-		$homesteadWebRoot = $helper->ask($this->input, $this->output, $homesteadWebRootPrompt);
-
-		$this->output->writeln("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead config.");
-		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
-		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
+		$changesConfirmed = $this->confirmChanges("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead config.");
+		if ($changesConfirmed === false) {
 			return;
 		}
 
@@ -97,52 +96,24 @@ class ConfigNewCommand extends Command {
 			'to' => $homesteadWebRoot
 		]);
 
-		try {
-			$this->homesteadConfig->save();
-		} catch (Exception $e) {
-			$this->output->writeln("<error>{$e->getMessage()}</error>");
-		}
-
-		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
+		$this->homesteadConfigSave();
 	}
 
-	protected function newDatabase()
-	{
-		$helper = $this->getHelper('question');
-
-		$databaseNamePrompt = new Question('Database name: ');
-		$databaseName = $helper->ask($this->input, $this->output, $databaseNamePrompt);
-
-		$this->output->writeln("About to add <info>{$databaseName}</info> to Homestead config.");
-		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
-		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
-			return;
-		}
-
-		$this->homesteadConfig->addTo('databases', $databaseName);
-
-		try {
-			$this->homesteadConfig->save();
-		} catch (Exception $e) {
-			$this->output->writeln("<error>{$e->getMessage()}</error>");
-		}
-
-		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
-	}
-
+	/**
+	 * Add new variables config set to config file
+	 *
+	 * Command:
+	 * homesteader config:new var|variable
+	 *
+	 * @return  void
+	 */
 	protected function newVariable()
 	{
-		$helper = $this->getHelper('question');
+		$variableKey = $this->prompt('Variable key: ');
+		$variableValue = $this->prompt('Variable value: ');
 
-		$variableKeyPrompt = new Question('Variable key: ');
-		$variableKey = $helper->ask($this->input, $this->output, $variableKeyPrompt);
-
-		$variableValuePrompt = new Question('Variable value: ');
-		$variableValue = $helper->ask($this->input, $this->output, $variableValuePrompt);
-
-		$this->output->writeln("About to add environmental variable <info>{$variableKey}</info> = <info>{$variableValue}</info> in Homestead config.");
-		$confirmation = new ConfirmationQuestion('Continue? [y/n] ', false);
-		if ( ! $helper->ask($this->input, $this->output, $confirmation)) {
+		$changesConfirmed = $this->confirmChanges("About to add environmental variable <info>{$variableKey}</info> = <info>{$variableValue}</info> in Homestead config.");
+		if ($changesConfirmed === false) {
 			return;
 		}
 
@@ -151,13 +122,29 @@ class ConfigNewCommand extends Command {
 			'value' => $variableValue
 		]);
 
-		try {
-			$this->homesteadConfig->save();
-		} catch (Exception $e) {
-			$this->output->writeln("<error>{$e->getMessage()}</error>");
+		$this->homesteadConfigSave();
+	}
+
+	/**
+	 * Add new database config file
+	 *
+	 * Command:
+	 * homesteader config:new database
+	 *
+	 * @return  void
+	 */
+	protected function newDatabase()
+	{
+		$database = $this->prompt('Database name: ');
+
+		$changesConfirmed = $this->confirmChanges("About to add <info>{$databaseName}</info> to Homestead config.");
+		if ($changesConfirmed === false) {
+			return;
 		}
 
-		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
+		$this->homesteadConfig->addTo('databases', $databaseName);
+
+		$this->homesteadConfigSave();
 	}
 
 }
