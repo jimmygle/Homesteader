@@ -90,6 +90,26 @@ class HomesteadConfig {
 	}
 
 	/**
+	 * Returns config as raw string (YAML formatted)
+	 *
+	 * @return  string
+	 */
+	public function __toString()
+	{
+		return $this->asString();
+	}
+
+	/**
+	 * Returns config as raw string (YAML formatted)
+	 *
+	 * @return  string
+	 */
+	public function asString()
+	{
+		return $this->configFileContents;
+	}
+
+	/**
 	 * Adds nested config items within valid top level items
 	 *
 	 * @param  string
