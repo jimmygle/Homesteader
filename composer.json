@@ -17,7 +17,7 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Homesteader\\": "src/"
+			"Homesteader\\Config\\": "src/Config/"
 		}
 	}
 }
