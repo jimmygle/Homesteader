@@ -23,6 +23,7 @@ class HomesteadConfig {
 			$this->findConfigFile();
 		}
 		$this->checkConfigFileExists();
+		$this->checkConfigFileReadable();
 		$this->parseConfigFileToArray();
 	}
 
@@ -49,6 +50,18 @@ class HomesteadConfig {
 	{
 		if (file_exists($this->configFilePath) === false) {
 			throw new Exception("File does not exist: {$this->configFilePath}");
+		}
+	}
+
+	/**
+	 * Verify config file is readable
+	 *
+	 * @return  void
+	 */
+	protected function checkConfigFileReadable()
+	{
+		if (is_readable($this->configFilePath) === false) {
+			throw new Exception("File is not readable: {$this->configFilePath}");
 		}
 	}
 
@@ -133,7 +146,20 @@ class HomesteadConfig {
 	public function save()
 	{
 		$this->configFileContents = Yaml::dump($this->config, 3);
+		$this->checkConfigFileWritable();
 		return $this->writeConfigFile();
+	}
+
+	/**
+	 * Verify config file is writable
+	 *
+	 * @return  void
+	 */
+	protected function checkConfigFileWritable()
+	{
+		if ((bool) is_writable($this->configFilePath) === false) {
+			throw new Exception("File is not writable: {$this->configFilePath}");
+		}
 	}
 
 	/**
@@ -145,7 +171,7 @@ class HomesteadConfig {
 	{
 		$bytesWrittenToDisk = file_put_contents($this->configFilePath, $this->configFileContents, LOCK_EX);
 		if ($bytesWrittenToDisk === false) {
-			throw new Exception("Unable to write to file: {$this->configFilePath}");
+			throw new Exception("Config was not saved to file: {$this->configFilePath}");
 		}
 		return $bytesWrittenToDisk;
 	}
