@@ -1,19 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: jimmygle
+ * Date: 3/8/15
+ * Time: 8:12 PM
+ */
 
-use Homestead\Config\HomesteadConfig;
+class ConfigHomesteadConfigTest {
 
-class ConfigHomesteadConfigTest extends \PHPUnit_Framework_TestCase {
-	
-	public function testItOutputsRawConfigFile()
-	{
-		$application = new Application();
-		$application->add(new ConfigShowCommand());
-
-		$command = $application->find('config:show');
-		$commandTester = new CommandTester($command);
-		$commandTester->execute([]);
-
-		$this->assertStringStartsWith('ip: ', $commandTester->getDisplay(), 'Homestead config file does not begin with "ip: "');
-	}
-
-}
+} 
