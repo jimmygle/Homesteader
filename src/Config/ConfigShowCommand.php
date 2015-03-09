@@ -16,12 +16,15 @@ class ConfigShowCommand extends ConfigCommand {
 		$this->setDescription('Show current Homestead config settings.');
 	}
 
-	/**
-	 * Initialize the command
-	 *
-	 * @param  Symfony\Component\Console\Input\InputInterface
-	 * @param  Symfony\Component\Console\Output\OutputInterface
-	 */
+    /**
+     * Initialize the command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @internal param $ Symfony\Component\Console\Input\InputInterface
+     * @internal param $ Symfony\Component\Console\Output\OutputInterface
+     * @return  void
+     */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		parent::execute($input, $output);

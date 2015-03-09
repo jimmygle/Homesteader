@@ -10,11 +10,13 @@ class HomesteadConfig {
 	protected $configFileContents;
 	protected $config;
 
-	/**
-	 * Sets config file path
-	 *
-	 * @return  void
-	 */
+    /**
+     * Sets config file path
+     *
+     * @param  string
+     * @throws Exception
+     * @return \Homesteader\Config\HomesteadConfig
+     */
 	public function __construct($customConfigFilePath = null)
 	{
 		if ($customConfigFilePath !== null) {
@@ -35,9 +37,9 @@ class HomesteadConfig {
 	protected function findConfigFile()
 	{
 		if (isset($_SERVER['HOME'])) {
-			$this->configFilePath = $_SERVER['HOME'] . '/.homestead/Homestead.yaml';
+			$this->configFilePath = $_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml';
 		} else {
-			$this->configFilePath = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPARATOR . './homestead/Homestead.yaml';
+			$this->configFilePath = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml';
 		}
 	}
 
