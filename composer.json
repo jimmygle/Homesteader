@@ -4,7 +4,7 @@
 	"version": "0.1.0",
 	"bin": ["homesteader"],
 	"require": {
-		"php": ">=5.4",
+		"php": ">=5.5",
 		"symfony/console": "~2.0",
 		"symfony/yaml": "3.0.*@dev"
 	},
