@@ -50,6 +50,7 @@ class HomesteadConfig {
 	 */
 	protected function checkConfigFileExists()
 	{
+        echo $this->configFilePath;
 		if (file_exists($this->configFilePath) === false) {
 			throw new Exception("File does not exist: {$this->configFilePath}");
 		}
