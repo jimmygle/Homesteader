@@ -12,8 +12,6 @@ class ConfigHomesteadConfigTest extends \PHPUnit_Framework_TestCase {
         $homesteadPath = '.homestead';
         vfsStream::setup($homesteadPath);
         $this->homesteadConfigFile = vfsStream::url("$homesteadPath/Homestead.yaml");
-        file_put_contents($this->homesteadConfigFile, file_get_contents(dirname(__FILE__) . '/DefaultHomestead.yaml'));
-        echo file_get_contents($this->homesteadConfigFile); exit;
     }
 
     public function testConfigFileOpensAsString()
