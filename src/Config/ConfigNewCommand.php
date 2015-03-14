@@ -18,12 +18,15 @@ class ConfigNewCommand extends ConfigCommand {
 		$this->addArgument('key', InputArgument::OPTIONAL, 'Tpye of config to add.');
 	}
 
-	/**
-	 * Initialize the command and determine which path to take
-	 *
-	 * @param  Symfony\Component\Console\Input\InputInterface
-	 * @param  Symfony\Component\Console\Output\OutputInterface
-	 */
+    /**
+     * Initialize the command and determine which path to take
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @internal param $ Symfony\Component\Console\Input\InputInterface
+     * @internal param $ Symfony\Component\Console\Output\OutputInterface
+     * @return  void
+     */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		parent::execute($input, $output);
@@ -38,7 +41,7 @@ class ConfigNewCommand extends ConfigCommand {
 			case 'database':
 				$this->newDatabase();
 				break;
-			case ('variable' || 'var'):
+			case ('variable'):
 				$this->newVariable();
 				break;
 			default:
@@ -135,7 +138,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 */
 	protected function newDatabase()
 	{
-		$database = $this->prompt('Database name: ');
+		$databaseName = $this->prompt('Database name: ');
 
 		$changesConfirmed = $this->confirmChanges("About to add <info>{$databaseName}</info> to Homestead config.");
 		if ($changesConfirmed === false) {

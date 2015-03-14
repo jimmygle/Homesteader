@@ -24,6 +24,7 @@ class HomesteadConfig {
 			$this->findConfigFile();
 		}
 		$this->checkConfigFileExists();
+		$this->checkConfigFileReadable();
 		$this->parseConfigFileToArray();
 	}
 
@@ -35,9 +36,9 @@ class HomesteadConfig {
 	protected function findConfigFile()
 	{
 		if (isset($_SERVER['HOME'])) {
-			$this->configFilePath = $_SERVER['HOME'] . '/.homestead/Homestead.yaml';
+			$this->configFilePath = $_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml';
 		} else {
-			$this->configFilePath = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPARATOR . './homestead/Homestead.yaml';
+			$this->configFilePath = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml';
 		}
 	}
 
@@ -151,6 +152,7 @@ class HomesteadConfig {
 	public function save()
 	{
 		$this->configFileContents = Yaml::dump($this->config, 3);
+		$this->checkConfigFileWritable();
 		return $this->writeConfigFile();
 	}
 
