@@ -10,11 +10,12 @@ class HomesteadConfig {
 	protected $configFileContents;
 	protected $config;
 
-	/**
-	 * Sets config file path
-	 *
-	 * @return  void
-	 */
+    /**
+     * Sets config file path
+     *
+     * @param string
+     * @return \Homesteader\Config\HomesteadConfig
+     */
 	public function __construct($customConfigFilePath = null)
 	{
 		if ($customConfigFilePath !== null) {
@@ -29,7 +30,7 @@ class HomesteadConfig {
 	/**
 	 * Finds the Homestead config file
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function findConfigFile()
 	{
@@ -40,22 +41,36 @@ class HomesteadConfig {
 		}
 	}
 
-	/**
-	 * Verify config file exists
-	 *
-	 * @return  void
-	 */
+    /**
+     * Verify config file exists
+     *
+     * @throws \ConfigFileIOException
+     * @return void
+     */
 	protected function checkConfigFileExists()
 	{
 		if (file_exists($this->configFilePath) === false) {
-			throw new Exception("File does not exist: {$this->configFilePath}");
+			throw new \ConfigFileIOException("File does not exist: {$this->configFilePath}");
+		}
+	}
+
+    /**
+     * Verify config file is readable
+     *
+     * @throws \ConfigFileIOException
+     * @return void
+     */
+	protected function checkConfigFileReadable()
+	{
+		if (is_readable($this->configFilePath) === false) {
+			throw new \ConfigFileIOException("File is not readable: {$this->configFilePath}");
 		}
 	}
 
 	/**
 	 * Loads homestead config file into an array
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function parseConfigFileToArray()
 	{
@@ -66,23 +81,24 @@ class HomesteadConfig {
 	/**
 	 * Reads config file
 	 *
-	 * @return  void
+     * @throws \ConfigFileIOException
+	 * @return void
 	 */
 	protected function readConfigFile()
 	{
 		$this->configFileContents = file_get_contents($this->configFilePath);
 		if ($this->configFileContents === false) {
-			throw new Exception("Unable to read homestead config file: {$this->configFilePath}");
+			throw new \ConfigFileIOException("Unable to read homestead config file: {$this->configFilePath}");
 		}
 		if ($this->configFileContents == false) {
-			throw new Exception("Contents of homestead config file are empty: {$this->configFilePath}");
+			throw new \ConfigFileIOException("Homestead config file is empty: {$this->configFilePath}");
 		}
 	}
 
 	/**
 	 * Returns config as array
 	 *
-	 * @return  array
+	 * @return array
 	 */
 	public function asArray()
 	{
@@ -92,7 +108,7 @@ class HomesteadConfig {
 	/**
 	 * Returns config as raw string (YAML formatted)
 	 *
-	 * @return  string
+	 * @return string
 	 */
 	public function __toString()
 	{
@@ -102,33 +118,35 @@ class HomesteadConfig {
 	/**
 	 * Returns config as raw string (YAML formatted)
 	 *
-	 * @return  string
+	 * @return string
 	 */
 	public function asString()
 	{
 		return $this->configFileContents;
 	}
 
-	/**
-	 * Adds nested config items within valid top level items
-	 *
-	 * @param  string
-	 * @param  string|array
-	 * @return  void
-	 */
+    /**
+     * Adds nested config items within valid top level items
+     *
+     * @param $topLevelKey
+     * @param $newConfigItem
+     * @throws \InvalidConfigKeyException
+     * @internal param $string
+     * @internal param $ string|array
+     * @return void
+     */
 	public function addTo($topLevelKey, $newConfigItem)
 	{
 		if (in_array($topLevelKey, $this->validTopLevelConfigKeys) === false) {
-			throw new Exception("Invalid top level key supplied: {$topLevelKey}");
+			throw new \InvalidConfigKeyException("Invalid top level key supplied: {$topLevelKey}");
 		}
 		$this->config[$topLevelKey][] = $newConfigItem;
-		return;
 	}
 
 	/**
 	 * Converts config to YAML and then saves it to disk
 	 *
-	 * @return  int  bytes written to disk
+	 * @return int Bytes written to disk
 	 */
 	public function save()
 	{
@@ -136,16 +154,30 @@ class HomesteadConfig {
 		return $this->writeConfigFile();
 	}
 
-	/**
-	 * Writes the config file to disk
-	 *
-	 * @return int  bytes written to disk
-	 */
+    /**
+     * Verify config file is writable
+     *
+     * @throws \ConfigFileIOException
+     * @return void
+     */
+	protected function checkConfigFileWritable()
+	{
+		if ((bool) is_writable($this->configFilePath) === false) {
+			throw new \ConfigFileIOException("File is not writable: {$this->configFilePath}");
+		}
+	}
+
+    /**
+     * Writes the config file to disk
+     *
+     * @throws \ConfigFileIOException
+     * @return int Bytes written to disk
+     */
 	protected function writeConfigFile()
 	{
 		$bytesWrittenToDisk = file_put_contents($this->configFilePath, $this->configFileContents, LOCK_EX);
 		if ($bytesWrittenToDisk === false) {
-			throw new Exception("Unable to write to file: {$this->configFilePath}");
+			throw new \ConfigFileIOException("Config was not saved to file: {$this->configFilePath}");
 		}
 		return $bytesWrittenToDisk;
 	}
