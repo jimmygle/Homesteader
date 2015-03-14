@@ -25,12 +25,15 @@ class ConfigCommand extends Command {
         $this->addOption('file', 'f', InputOption::VALUE_OPTIONAL, 'Specifies custom path to Homestead config file.', null);
     }
 
-	/**
-	 * Initializer for all config commands
-	 *
-	 * @param  Symfony\Component\Console\Input\InputInterface
-	 * @param  Symfony\Component\Console\Output\OutputInterface
-	 */
+    /**
+     * Initializer for all config commands
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @internal param $ Symfony\Component\Console\Input\InputInterface
+     * @internal param $ Symfony\Component\Console\Output\OutputInterface
+     * @return void;
+     */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$this->input = $input;
@@ -65,10 +68,20 @@ class ConfigCommand extends Command {
 		return (bool) $this->questionHelper->ask($this->input, $this->output, $confirmation);
 	}
 
+    /**
+     * Outputs message of change confirmation being canceled
+     *
+     * @return void
+     */
+    public function outputChangesCanceled()
+    {
+        $this->output->writeln("<info>Changes not applied. Exiting.</info>");
+    }
+
 	/**
 	 * Attempts to save the homestead config file
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function homesteadConfigSave()
 	{
