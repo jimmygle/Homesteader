@@ -22,6 +22,9 @@
 	"autoload": {
 		"psr-4": {
 			"Homesteader\\Config\\": "src/Config/"
-		}
+		},
+        "files": [
+            "src/Exceptions.php"
+        ]
 	}
 }
