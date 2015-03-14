@@ -2,17 +2,35 @@
 
 use Homesteader\Config\HomesteadConfig;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamWrapper;
+use org\bovigo\vfs\vfsStreamDirectory;
 
 class ConfigHomesteadConfigTest extends \PHPUnit_Framework_TestCase {
 
-    protected $homesteadConfigFile;
+    protected $homesteadConfigFile = '.homestead/Homestead.yaml';
 
     public function setUp()
     {
-        $homesteadPath = '.homestead';
-        vfsStream::setup($homesteadPath);
-        $this->homesteadConfigFile = vfsStream::url("$homesteadPath/Homestead.yaml");
+        vfsStreamWrapper::register();
+        $root = new vfsStreamDirectory('.homestead');
+        vfsStreamWrapper::setRoot($root);
+        $this->homesteadConfigFile = vfsStream::url('.homestead/Homestead.yaml');
+        $defaultHomesteadConfig = file_get_contents(dirname(__FILE__) . '/DefaultHomestead.yaml');
+        file_put_contents($this->homesteadConfigFile, $defaultHomesteadConfig);
     }
+
+    public function tearDown()
+    {
+        if (file_exists($this->homesteadConfigFile)) {
+            unlink($this->homesteadConfigFile);
+        }
+    }
+
+    public function testVirtualFilesystemSetupHappened()
+    {
+        $this->assertFileExists($this->homesteadConfigFile);
+    }
+
 
     public function testConfigFileOpensAsString()
     {
@@ -21,7 +39,7 @@ class ConfigHomesteadConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertStringStartsWith('---', $configFile->asString());
     }
 
-    public function testConfigFileOpensAsArray()
+    public function testConfigFileOpensAsArrayAndDataIsValid()
     {
         $configFile = new HomesteadConfig($this->homesteadConfigFile);
         $this->assertArrayHasKey('ip', $configFile->asArray());
