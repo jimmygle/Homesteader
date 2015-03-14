@@ -8,12 +8,12 @@ class ConfigNewCommandTest extends \PHPUnit_Framework_TestCase {
 
     public function testNewFolderCommandAddsFolderToConfigFile()
     {
-        $application = new Application();
-        $application->add(new ConfigNewCommand());
-
-        $command = $application->find('config:new');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(['folder']);
+//        $application = new Application();
+//        $application->add(new ConfigNewCommand());
+//
+//        $command = $application->find('config:new');
+//        $commandTester = new CommandTester($command);
+//        $commandTester->execute(['folder']);
 
         // $this->assertStringStartsWith('ip: ', $commandTester->getDisplay(), 'Homestead config file does not begin with "ip: "');
     }
