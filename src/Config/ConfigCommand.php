@@ -3,6 +3,7 @@
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Homesteader\Config\HomesteadConfig;
@@ -14,6 +15,16 @@ class ConfigCommand extends Command {
 	protected $homesteadConfig;
 	protected $questionHelper;
 
+    /**
+     * Add command configuration available to all config commands
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->addOption('file', 'f', InputOption::VALUE_OPTIONAL, 'Specifies custom path to Homestead config file.', null);
+    }
+
 	/**
 	 * Initializer for all config commands
 	 *
@@ -24,7 +35,7 @@ class ConfigCommand extends Command {
 	{
 		$this->input = $input;
 		$this->output = $output;
-		$this->homesteadConfig = new HomesteadConfig;
+		$this->homesteadConfig = new HomesteadConfig($input->getOption('file'));
 		$this->questionHelper = $this->getHelper('question');
 	}
 
