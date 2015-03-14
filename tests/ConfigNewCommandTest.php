@@ -9,6 +9,8 @@ use Homesteader\Config\HomesteadConfig;
 
 class ConfigNewCommandTest extends ConfigSetup {
 
+//    @todo refactor these tests... lots of repetition
+
     protected $app;
 
     public function setUp()
@@ -43,6 +45,28 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertEquals('/home/vagrant/TestAppName', $savedConfigFile['folders'][1]['to']);
     }
 
+    public function testItShouldCancelChangesWhenOnNewFolder()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "/Users/user/Projects/TestAppName\n" .
+            "/home/vagrant/TestAppName\n" .
+            "n\n"
+        ));
+        $commandTester->execute([
+            'key' => 'folder',
+            '--file' => $this->homesteadConfigFilePath
+        ]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asString();
+
+        $this->assertStringEndsWith("Changes not applied. Exiting.\n", $commandTester->getDisplay());
+        $this->assertEquals($this->getDefaultConfigFileContents(), $savedConfigFile);
+    }
+
     public function testItShouldCreateNewSite()
     {
         $command = $this->app->find('config:new');
@@ -66,6 +90,28 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertCount(2, $savedConfigFile['sites']);
         $this->assertEquals('test-app.local', $savedConfigFile['sites'][1]['map']);
         $this->assertEquals('/home/vagrant/test-app', $savedConfigFile['sites'][1]['to']);
+    }
+
+    public function testItShouldCancelChangesWhenOnNewSite()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "test-app.local\n" .
+            "/home/vagrant/test-app\n" .
+            "n\n"
+        ));
+        $commandTester->execute([
+            'key' => 'site',
+            '--file' => $this->homesteadConfigFilePath
+        ]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asString();
+
+        $this->assertStringEndsWith("Changes not applied. Exiting.\n", $commandTester->getDisplay());
+        $this->assertEquals($this->getDefaultConfigFileContents(), $savedConfigFile);
     }
 
     public function testItShouldCreateNewVariable()
@@ -93,6 +139,28 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertEquals('test_value', $savedConfigFile['variables'][1]['value']);
     }
 
+    public function testItShouldCancelChangesWhenOnNewVariable()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "TEST_VAR\n" .
+            "test_value\n" .
+            "n\n"
+        ));
+        $commandTester->execute([
+            'key' => 'variable',
+            '--file' => $this->homesteadConfigFilePath
+        ]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asString();
+
+        $this->assertStringEndsWith("Changes not applied. Exiting.\n", $commandTester->getDisplay());
+        $this->assertEquals($this->getDefaultConfigFileContents(), $savedConfigFile);
+    }
+
     public function testItShouldCreateNewDatabase()
     {
         $command = $this->app->find('config:new');
@@ -114,6 +182,50 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertCount(9, $savedConfigFile);
         $this->assertCount(2, $savedConfigFile['databases']);
         $this->assertEquals('test_db', $savedConfigFile['databases'][1]);
+    }
+
+    public function testItShouldCancelChangesWhenOnNewDatabase()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(
+            "test_db\n" .
+            "n\n"
+        ));
+        $commandTester->execute([
+            'key' => 'database',
+            '--file' => $this->homesteadConfigFilePath
+        ]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asString();
+
+        $this->assertStringEndsWith("Changes not applied. Exiting.\n", $commandTester->getDisplay());
+        $this->assertEquals($this->getDefaultConfigFileContents(), $savedConfigFile);
+    }
+
+    public function testItShouldHandleInvalidKeyEntry()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'key' => 'ksdfsl',
+            '--file' => $this->homesteadConfigFilePath
+        ]);
+
+        $this->assertStringEndsWith("Invalid entry!\n", $commandTester->getDisplay());
+    }
+
+    public function testItShouldHandleNoKeyEntry()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            '--file' => $this->homesteadConfigFilePath
+        ]);
+
+        $this->assertStringEndsWith("Invalid entry!\n", $commandTester->getDisplay());
     }
 
 }
