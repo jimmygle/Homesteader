@@ -67,6 +67,7 @@ class ConfigNewCommand extends ConfigCommand {
 
 		$changesConfirmed = $this->confirmChanges("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info> in Homestead config.");
 		if ($changesConfirmed === false) {
+            $this->outputChangesCanceled();
 			return;
 		}
 
@@ -94,7 +95,8 @@ class ConfigNewCommand extends ConfigCommand {
 
 		$changesConfirmed = $this->confirmChanges("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead config.");
 		if ($changesConfirmed === false) {
-			return;
+			$this->outputChangesCanceled();
+            return;
 		}
 
 		$this->homesteadConfig->addTo('sites', [
@@ -121,6 +123,7 @@ class ConfigNewCommand extends ConfigCommand {
 
 		$changesConfirmed = $this->confirmChanges("About to add environmental variable <info>{$variableKey}</info> = <info>{$variableValue}</info> in Homestead config.");
 		if ($changesConfirmed === false) {
+            $this->outputChangesCanceled();
 			return;
 		}
 
@@ -147,6 +150,7 @@ class ConfigNewCommand extends ConfigCommand {
 
 		$changesConfirmed = $this->confirmChanges("About to add <info>{$databaseName}</info> to Homestead config.");
 		if ($changesConfirmed === false) {
+            $this->outputChangesCanceled();
 			return;
 		}
 
