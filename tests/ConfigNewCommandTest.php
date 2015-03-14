@@ -1,21 +1,21 @@
-<?php 
+<?php require_once __DIR__.'/ConfigSetup.php';
 
-use Homesteader\Config\ConfigNewCommand;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Application;
+use Homesteader\Config\ConfigNewCommand;
 
-class ConfigNewCommandTest extends \PHPUnit_Framework_TestCase {
+class ConfigNewCommandTest extends ConfigSetup {
 
-    public function testNewFolderCommandAddsFolderToConfigFile()
+    public function testItShouldOutputRawConfigFile()
     {
-//        $application = new Application();
-//        $application->add(new ConfigNewCommand());
-//
-//        $command = $application->find('config:new');
-//        $commandTester = new CommandTester($command);
-//        $commandTester->execute(['folder']);
+        $application = new Application();
+        $application->add(new ConfigNewCommand());
 
-        // $this->assertStringStartsWith('ip: ', $commandTester->getDisplay(), 'Homestead config file does not begin with "ip: "');
+        $command = $application->find('config:show');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--file' => $this->homesteadConfigFilePath]);
+
+        $this->assertStringStartsWith('---', $commandTester->getDisplay(), 'Homestead config file does not begin with "ip: "');
     }
 
 }

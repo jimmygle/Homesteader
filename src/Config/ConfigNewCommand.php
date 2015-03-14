@@ -9,13 +9,13 @@ class ConfigNewCommand extends ConfigCommand {
 	/**
 	 * Configure command
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function configure()
 	{
 		$this->setName('config:new');
 		$this->setDescription('Add a new item to the Homestead config.');
-		$this->addArgument('key', InputArgument::OPTIONAL, 'Tpye of config to add.');
+		$this->addArgument('key', InputArgument::OPTIONAL, 'Type of config to add.');
 	}
 
     /**
@@ -25,7 +25,7 @@ class ConfigNewCommand extends ConfigCommand {
      * @param OutputInterface $output
      * @internal param $ Symfony\Component\Console\Input\InputInterface
      * @internal param $ Symfony\Component\Console\Output\OutputInterface
-     * @return  void
+     * @return void
      */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
@@ -56,7 +56,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * Command:
 	 * homesteader config:new folder
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function newFolder()
 	{
@@ -82,7 +82,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * Command:
 	 * homesteader config:new site
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function newSite()
 	{
@@ -108,7 +108,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * Command:
 	 * homesteader config:new var|variable
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function newVariable()
 	{
@@ -134,7 +134,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * Command:
 	 * homesteader config:new database
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	protected function newDatabase()
 	{
