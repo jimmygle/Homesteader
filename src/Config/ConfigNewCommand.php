@@ -13,6 +13,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 */
 	protected function configure()
 	{
+        parent::configure();
 		$this->setName('config:new');
 		$this->setDescription('Add a new item to the Homestead config.');
 		$this->addArgument('key', InputArgument::OPTIONAL, 'Type of config to add.');
@@ -57,6 +58,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new folder
 	 *
 	 * @return void
+     * @todo  Write test for changes not confirmed
 	 */
 	protected function newFolder()
 	{
@@ -83,6 +85,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new site
 	 *
 	 * @return void
+     * @todo  Write test for changes not confirmed
 	 */
 	protected function newSite()
 	{
@@ -109,6 +112,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new var|variable
 	 *
 	 * @return void
+     * @todo  Write test for changes not confirmed
 	 */
 	protected function newVariable()
 	{
@@ -135,6 +139,7 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new database
 	 *
 	 * @return void
+     * @todo  Write test for changes not confirmed
 	 */
 	protected function newDatabase()
 	{

@@ -177,7 +177,7 @@ class HomesteadConfig {
      */
 	protected function writeConfigFile()
 	{
-		$bytesWrittenToDisk = file_put_contents($this->configFilePath, $this->configFileContents, LOCK_EX);
+		$bytesWrittenToDisk = file_put_contents($this->configFilePath, $this->configFileContents);
 		if ($bytesWrittenToDisk === false) {
 			throw new \ConfigFileIOException("Config was not saved to file: {$this->configFilePath}");
 		}
