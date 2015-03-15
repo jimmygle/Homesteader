@@ -55,8 +55,7 @@ class ConfigListCommand extends ConfigCommand {
         $this->output->writeln('  <comment>Global Options:</comment>');
         $this->output->writeln('    <info>--no-interaction</info> (-n)   No interaction (for unattended use).');
         $this->output->writeln('    <info>--file</info>           (-f)   Custom config file path.');
-
-        $this->output->writeln('  ');
+        $this->output->writeln('');
         $this->output->writeln('');
     }
 
