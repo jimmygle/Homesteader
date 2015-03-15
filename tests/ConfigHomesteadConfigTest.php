@@ -34,7 +34,7 @@ class ConfigHomesteadConfigTest extends ConfigSetup {
     // @todo  this is not a very good way to test -- figure out a better way
     public function testItShouldHandleDefaultConfigFile()
     {
-        if (file_exists($_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml') OR file_exists($_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml')) {
+        if (@file_exists($_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml') OR @file_exists($_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'] . DIRECTORY_SEPARATOR . '.homestead/Homestead.yaml')) {
             // default config file exists
             $configFile = new HomesteadConfig();
             $this->assertArrayHasKey('ip', $configFile->asArray());
