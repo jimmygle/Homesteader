@@ -88,6 +88,17 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertEquals('/home/vagrant/TestAppName', $savedConfigFile['folders'][1]['to']);
     }
 
+    public function testItShouldThrowExceptionIfMissingValues()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $this->setExpectedException('MissingValueException', 'Value required for prompt: "Path to host machine (not Homestead) directory: "');
+        $commandTester->execute([
+            'key' => 'folder',
+            '--file' => $this->homesteadConfigFilePath
+        ], ['interactive' => false]);
+    }
+
     public function testItShouldCreateNewSite()
     {
         $command = $this->app->find('config:new');
