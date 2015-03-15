@@ -33,26 +33,30 @@ class ConfigListCommand extends ConfigCommand {
         $this->output->writeln('');
         $this->output->writeln('The config commands allow for easy manipulation of the Homestead config file.');
         $this->output->writeln('');
-        $this->output->writeln('  <comment>config:show</comment>             Outputs the current config file to terminal.');
+        $this->output->writeln('  <comment>config:show</comment>               Outputs the current config file to terminal.');
         $this->output->writeln('');
-        $this->output->writeln('  Available options are included with example values.');
+        $this->output->writeln('  All config:new options are optional. You\'ll be prompted unless -n is set.');
         $this->output->writeln('');
-        $this->output->writeln('  <comment>config:new folder</comment>       Adds synced directory set.');
-        $this->output->writeln('    <info>--host</info>      (-h)      /path/to/host/dir');
-        $this->output->writeln('    <info>--homestead</info> (-g)      /path/on/homestead/to/dir');
+        $this->output->writeln('  <comment>config:new folder</comment>         Adds synced directory set.');
+        $this->output->writeln('    <info>--host</info>           (-h)     Path on your local system.');
+        $this->output->writeln('    <info>--homestead</info>      (-g)     Path in Homestead\'s filesystem.');
         $this->output->writeln('');
-        $this->output->writeln('  <comment>config:new site</comment>         Adds site and directory.');
-        $this->output->writeln('    <info>--domain</info>    (-d)      domaintoadd.com');
-        $this->output->writeln('    <info>--homestead</info> (-g)      /path/on/homestead/to/public/');
+        $this->output->writeln('  <comment>config:new site</comment>           Adds site and directory.');
+        $this->output->writeln('    <info>--domain</info>         (-d)     Local domain name of site.');
+        $this->output->writeln('    <info>--homestead</info>      (-g)     Path to public directory in Homestead.');
         $this->output->writeln('');
-        $this->output->writeln('  <comment>config:new variable</comment>     Adds variable.');
-        $this->output->writeln('    <info>--key</info>       (-k)      VAR');
-        $this->output->writeln('    <info>--value</info>     (-v)      VALUE');
+        $this->output->writeln('  <comment>config:new variable</comment>       Adds system variables.');
+        $this->output->writeln('    <info>--key</info>            (-k)      Name of variable.');
+        $this->output->writeln('    <info>--value</info>          (-v)      Value of variable.');
         $this->output->writeln('');
-        $this->output->writeln('  <comment>config:new database</comment>     Adds database.');
-        $this->output->writeln('    <info>--name</info>      (-n)      db_name');
+        $this->output->writeln('  <comment>config:new database</comment>       Adds database.');
+        $this->output->writeln('    <info>--name</info>           (-n)      Database name.');
         $this->output->writeln('');
-        $this->output->writeln('  Add -n for no interaction.');
+        $this->output->writeln('  <comment>Global Options:</comment>');
+        $this->output->writeln('    <info>--no-interaction</info> (-n)   No interaction (for unattended use).');
+        $this->output->writeln('    <info>--file</info>           (-f)   Custom config file path.');
+
+        $this->output->writeln('  ');
         $this->output->writeln('');
     }
 
