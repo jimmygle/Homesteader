@@ -214,7 +214,7 @@ class ConfigNewCommandTest extends ConfigSetup {
             '--file' => $this->homesteadConfigFilePath
         ]);
 
-        $this->assertStringEndsWith("Invalid entry!\n", $commandTester->getDisplay());
+        $this->assertStringStartsWith(PHP_EOL . "Adds new config options to the Homestead config file.", $commandTester->getDisplay());
     }
 
     public function testItShouldHandleNoKeyEntry()
@@ -225,7 +225,7 @@ class ConfigNewCommandTest extends ConfigSetup {
             '--file' => $this->homesteadConfigFilePath
         ]);
 
-        $this->assertStringEndsWith("Invalid entry!\n", $commandTester->getDisplay());
+        $this->assertStringStartsWith(PHP_EOL . "Adds new config options to the Homestead config file.", $commandTester->getDisplay());
     }
 
 }
