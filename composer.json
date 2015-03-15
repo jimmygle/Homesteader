@@ -1,7 +1,10 @@
 {
 	"name": "jimmygle/homesteader",
-	"description": "A laravel homestead config manager.",
-	"version": "0.1.0",
+	"description": "A Laravel Homestead toolkit to help with automation.",
+    "keywords": ["homestead", "laravel", "vagrant"],
+    "homepage": "http://github.com/jimmygle/Homesteader",
+    "license": "MIT",
+    "version": "0.1.0",
 	"bin": ["homesteader"],
 	"require": {
 		"php": ">=5.5",
@@ -12,7 +15,6 @@
         "phpunit/phpunit": "4.7.*@dev",
         "mikey179/vfsStream": "~1"
     },
-	"license": "MIT",
 	"authors": [
 		{
 			"name": "Jimmy Gleason",
