@@ -265,7 +265,7 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertCount(2, $savedConfigFile['databases']);
         $this->assertEquals('test_db', $savedConfigFile['databases'][1]);
     }
-    
+
     public function testItShouldCancelChangesWhenOnNewDatabase()
     {
         $command = $this->app->find('config:new');

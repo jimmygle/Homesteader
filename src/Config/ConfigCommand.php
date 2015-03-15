@@ -32,7 +32,7 @@ class ConfigCommand extends Command {
      * @param OutputInterface $output
      * @internal param $ Symfony\Component\Console\Input\InputInterface
      * @internal param $ Symfony\Component\Console\Output\OutputInterface
-     * @return void;
+     * @return void
      */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
@@ -42,15 +42,18 @@ class ConfigCommand extends Command {
 		$this->questionHelper = $this->getHelper('question');
 	}
 
-	/**
-	 * Prompts for input if interaction enabled with option name default
-	 *
-	 * @param string
+    /**
+     * Prompts for input if interaction enabled with option name default
+     *
+     * @param $promptText
      * @param string
-	 * @return string
+     * @param bool $isRequired
+     * @throws \MissingValueException
+     * @internal param $bool
+     * @return string
      * @todo  refactor this
-	 */
-	protected function prompt($promptText, $optionKeyOfDefault = null)
+     */
+	protected function prompt($promptText, $optionKeyOfDefault = null, $isRequired = false)
 	{
         try {
             $defaultAnswer = $this->input->getOption($optionKeyOfDefault);
@@ -63,10 +66,16 @@ class ConfigCommand extends Command {
                 $promptText = $promptText . '[' . $defaultAnswer . ']: ';
             }
             $prompt = new Question($promptText);
-            return $this->questionHelper->ask($this->input, $this->output, $prompt);
+            $answer = $this->questionHelper->ask($this->input, $this->output, $prompt);
+        } else {
+            $answer = $defaultAnswer;
         }
 
-        return $defaultAnswer;
+        if ($isRequired === true && $answer == false) {
+            throw new \MissingValueException('Value required for prompt: "' . $promptText . '"');
+        }
+
+        return $answer;
 	}
 
 	/**
