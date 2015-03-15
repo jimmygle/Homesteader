@@ -9,7 +9,7 @@ use Homesteader\Config\HomesteadConfig;
 
 class ConfigNewCommandTest extends ConfigSetup {
 
-//    @todo refactor these tests... lots of repetition
+    // @todo refactor these tests... lots of repetition
 
     protected $app;
 
@@ -67,6 +67,27 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertEquals($this->getDefaultConfigFileContents(), $savedConfigFile);
     }
 
+    public function testItShouldCreateNewFolderWithNoInteraction()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'key' => 'folder',
+            '--file' => $this->homesteadConfigFilePath,
+            '--host' => '/Users/user/Projects/TestAppName',
+            '--homestead' => '/home/vagrant/TestAppName'
+        ], ['interactive' => false]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asArray();
+
+        $this->assertStringEndsWith("Homestead config file successfully updated.\n", $commandTester->getDisplay());
+        $this->assertCount(9, $savedConfigFile);
+        $this->assertCount(2, $savedConfigFile['folders']);
+        $this->assertEquals('/Users/user/Projects/TestAppName', $savedConfigFile['folders'][1]['map']);
+        $this->assertEquals('/home/vagrant/TestAppName', $savedConfigFile['folders'][1]['to']);
+    }
+
     public function testItShouldCreateNewSite()
     {
         $command = $this->app->find('config:new');
@@ -81,6 +102,27 @@ class ConfigNewCommandTest extends ConfigSetup {
             'key' => 'site',
             '--file' => $this->homesteadConfigFilePath
         ]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asArray();
+
+        $this->assertStringEndsWith("Homestead config file successfully updated.\n", $commandTester->getDisplay());
+        $this->assertCount(9, $savedConfigFile);
+        $this->assertCount(2, $savedConfigFile['sites']);
+        $this->assertEquals('test-app.local', $savedConfigFile['sites'][1]['map']);
+        $this->assertEquals('/home/vagrant/test-app', $savedConfigFile['sites'][1]['to']);
+    }
+
+    public function testItShouldCreateNewSiteWithNoInteraction()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'key' => 'site',
+            '--file' => $this->homesteadConfigFilePath,
+            '--domain' => 'test-app.local',
+            '--homestead' => '/home/vagrant/test-app'
+        ], ['interactive' => false]);
 
         $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
         $savedConfigFile = $savedConfigFile->asArray();
@@ -139,6 +181,27 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertEquals('test_value', $savedConfigFile['variables'][1]['value']);
     }
 
+    public function testItShouldCreateNewVariableWithNoInteraction()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'key' => 'variable',
+            '--file' => $this->homesteadConfigFilePath,
+            '--key' => 'TEST_VAR',
+            '--value' => 'test_value'
+        ], ['interactive' => false]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asArray();
+
+        $this->assertStringEndsWith("Homestead config file successfully updated.\n", $commandTester->getDisplay());
+        $this->assertCount(9, $savedConfigFile);
+        $this->assertCount(2, $savedConfigFile['variables']);
+        $this->assertEquals('TEST_VAR', $savedConfigFile['variables'][1]['key']);
+        $this->assertEquals('test_value', $savedConfigFile['variables'][1]['value']);
+    }
+
     public function testItShouldCancelChangesWhenOnNewVariable()
     {
         $command = $this->app->find('config:new');
@@ -184,6 +247,25 @@ class ConfigNewCommandTest extends ConfigSetup {
         $this->assertEquals('test_db', $savedConfigFile['databases'][1]);
     }
 
+    public function testItShouldCreateNewDatabaseWithNoInteraction()
+    {
+        $command = $this->app->find('config:new');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'key' => 'database',
+            '--file' => $this->homesteadConfigFilePath,
+            '--name' => 'test_db'
+        ], ['interactive' => false]);
+
+        $savedConfigFile = new HomesteadConfig($this->homesteadConfigFilePath);
+        $savedConfigFile = $savedConfigFile->asArray();
+
+        $this->assertStringEndsWith("Homestead config file successfully updated.\n", $commandTester->getDisplay());
+        $this->assertCount(9, $savedConfigFile);
+        $this->assertCount(2, $savedConfigFile['databases']);
+        $this->assertEquals('test_db', $savedConfigFile['databases'][1]);
+    }
+    
     public function testItShouldCancelChangesWhenOnNewDatabase()
     {
         $command = $this->app->find('config:new');
