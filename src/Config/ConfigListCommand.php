@@ -38,7 +38,7 @@ class ConfigListCommand extends ConfigCommand {
         $this->output->writeln('  All config:new options are optional. You\'ll be prompted unless -n is set.');
         $this->output->writeln('');
         $this->output->writeln('  <comment>config:new folder</comment>         Adds synced directory set.');
-        $this->output->writeln('    <info>--host</info>           (-h)     Path on your local system.');
+        $this->output->writeln('    <info>--host</info>           (-o)     Path on your local system.');
         $this->output->writeln('    <info>--homestead</info>      (-g)     Path in Homestead\'s filesystem.');
         $this->output->writeln('');
         $this->output->writeln('  <comment>config:new site</comment>           Adds site and directory.');
@@ -47,10 +47,10 @@ class ConfigListCommand extends ConfigCommand {
         $this->output->writeln('');
         $this->output->writeln('  <comment>config:new variable</comment>       Adds system variables.');
         $this->output->writeln('    <info>--key</info>            (-k)      Name of variable.');
-        $this->output->writeln('    <info>--value</info>          (-v)      Value of variable.');
+        $this->output->writeln('    <info>--value</info>          (-a)      Value of variable.');
         $this->output->writeln('');
         $this->output->writeln('  <comment>config:new database</comment>       Adds database.');
-        $this->output->writeln('    <info>--name</info>           (-n)      Database name.');
+        $this->output->writeln('    <info>--name</info>           (-b)      Database name.');
         $this->output->writeln('');
         $this->output->writeln('  <comment>Global Options:</comment>');
         $this->output->writeln('    <info>--no-interaction</info> (-n)   No interaction (for unattended use).');
