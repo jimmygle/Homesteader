@@ -18,7 +18,13 @@ class ConfigNewCommand extends ConfigCommand {
 		$this->setName('config:new');
 		$this->setDescription('Add a new item to the Homestead config.');
 		$this->addArgument('key', InputArgument::OPTIONAL, 'Type of config to add. [folder|site|database|variable]');
-	}
+	    $this->addOption('host', 'o', InputArgument::OPTIONAL, 'Path on your local machine.');
+        $this->addOption('homestead', 'g', InputArgument::OPTIONAL, 'Path in Homestead\'s filesystem.');
+        $this->addOption('domain', 'd', InputArgument::OPTIONAL, 'Local domain name of site.');
+        $this->addOption('key', 'k', InputArgument::OPTIONAL, 'Name of variable.');
+        $this->addOption('value', 'a', InputArgument::OPTIONAL, 'Value of variable.');
+        $this->addOption('name', 'b', InputArgument::OPTIONAL, 'Database name.');
+    }
 
     /**
      * Initialize the command and determine which path to take
@@ -64,14 +70,13 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new folder
 	 *
 	 * @return void
-     * @todo  Write test for changes not confirmed
 	 */
 	protected function newFolder()
 	{
-		$hostFolder = $this->prompt('Path to host machine (not Homestead) directory: ');
-		$homesteadFolder = $this->prompt('Path to internal Homestead directory: ');
+        $hostFolder = $this->prompt('Path to host machine (not Homestead) directory: ', 'host');
+		$homesteadFolder = $this->prompt('Path to internal Homestead directory: ', 'homestead');
 
-		$changesConfirmed = $this->confirmChanges("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info> in Homestead config.");
+        $changesConfirmed = $this->confirmChanges("About to sync <info>{$hostFolder}</info> to <info>{$homesteadFolder}</info> in Homestead config.");
 		if ($changesConfirmed === false) {
             $this->outputChangesCanceled();
 			return;
@@ -83,7 +88,7 @@ class ConfigNewCommand extends ConfigCommand {
 		]);
 
 		$this->homesteadConfigSave();
-	}
+    }
 
 	/**
 	 * Add new sites config set to config file
@@ -92,18 +97,17 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new site
 	 *
 	 * @return void
-     * @todo  Write test for changes not confirmed
 	 */
 	protected function newSite()
 	{
-		$domainName = $this->prompt('Domain name: ');
-		$homesteadWebRoot = $this->prompt('Path to web root in Homestead: ');
+        $domainName = $this->prompt('Domain name: ', 'domain');
+        $homesteadWebRoot = $this->prompt('Path to web root in Homestead: ', 'homestead');
 
-		$changesConfirmed = $this->confirmChanges("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead config.");
-		if ($changesConfirmed === false) {
-			$this->outputChangesCanceled();
+        $changesConfirmed = $this->confirmChanges("About to point <info>{$domainName}</info> to <info>{$homesteadWebRoot}</info> in Homestead config.");
+        if ($changesConfirmed === false) {
+            $this->outputChangesCanceled();
             return;
-		}
+        }
 
 		$this->homesteadConfig->addTo('sites', [
 			'map' => $domainName,
@@ -120,12 +124,11 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new var|variable
 	 *
 	 * @return void
-     * @todo  Write test for changes not confirmed
 	 */
 	protected function newVariable()
 	{
-		$variableKey = $this->prompt('Variable key: ');
-		$variableValue = $this->prompt('Variable value: ');
+        $variableKey = $this->prompt('Variable key: ', 'key');
+		$variableValue = $this->prompt('Variable value: ', 'value');
 
 		$changesConfirmed = $this->confirmChanges("About to add environmental variable <info>{$variableKey}</info> = <info>{$variableValue}</info> in Homestead config.");
 		if ($changesConfirmed === false) {
@@ -148,11 +151,10 @@ class ConfigNewCommand extends ConfigCommand {
 	 * homesteader config:new database
 	 *
 	 * @return void
-     * @todo  Write test for changes not confirmed
 	 */
 	protected function newDatabase()
 	{
-		$databaseName = $this->prompt('Database name: ');
+		$databaseName = $this->prompt('Database name: ', 'name');
 
 		$changesConfirmed = $this->confirmChanges("About to add <info>{$databaseName}</info> to Homestead config.");
 		if ($changesConfirmed === false) {

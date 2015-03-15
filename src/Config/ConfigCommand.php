@@ -43,19 +43,34 @@ class ConfigCommand extends Command {
 	}
 
 	/**
-	 * Prompts for input
+	 * Prompts for input if interaction enabled with option name default
 	 *
-	 * @param  string
-	 * @return  string
+	 * @param string
+     * @param string
+	 * @return string
+     * @todo  refactor this
 	 */
-	protected function prompt($promptText)
+	protected function prompt($promptText, $optionKeyOfDefault = null)
 	{
-		$prompt = new Question($promptText);
-		return $this->questionHelper->ask($this->input, $this->output, $prompt);
+        try {
+            $defaultAnswer = $this->input->getOption($optionKeyOfDefault);
+        } catch (\InvalidArgumentException $e) {
+            $defaultAnswer = false;
+        }
+
+        if ($this->input->isInteractive()) {
+            if ($defaultAnswer != false) {
+                $promptText = $promptText . '[' . $defaultAnswer . ']: ';
+            }
+            $prompt = new Question($promptText);
+            return $this->questionHelper->ask($this->input, $this->output, $prompt);
+        }
+
+        return $defaultAnswer;
 	}
 
 	/**
-	 * Outputs summary of changes and prompts for confirmation
+	 * Outputs summary of changes and prompts for confirmation, or assumes yes if non-interactive
 	 *
 	 * @param  string
 	 * @param  string
@@ -63,9 +78,12 @@ class ConfigCommand extends Command {
 	 */
 	protected function confirmChanges($changeSummary, $confirmationText = 'Continue? [y/n] ')
 	{
-		$this->output->writeln($changeSummary);
-		$confirmation = new ConfirmationQuestion($confirmationText, false);
-		return (bool) $this->questionHelper->ask($this->input, $this->output, $confirmation);
+        if ($this->input->isInteractive()) {
+            $this->output->writeln($changeSummary);
+            $confirmation = new ConfirmationQuestion($confirmationText, false);
+            return (bool) $this->questionHelper->ask($this->input, $this->output, $confirmation);
+        }
+        return true;
 	}
 
     /**
