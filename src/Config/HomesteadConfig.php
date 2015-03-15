@@ -88,9 +88,6 @@ class HomesteadConfig {
 	protected function readConfigFile()
 	{
 		$this->configFileContents = file_get_contents($this->configFilePath);
-		if ($this->configFileContents === false) {
-			throw new \ConfigFileIOException("Unable to read homestead config file: {$this->configFilePath}");
-		}
 		if ($this->configFileContents == false) {
 			throw new \ConfigFileIOException("Homestead config file is empty: {$this->configFilePath}");
 		}
@@ -131,7 +128,7 @@ class HomesteadConfig {
      *
      * @param $topLevelKey
      * @param $newConfigItem
-     * @throws \InvalidConfigKeyException
+     * @throws \ConfigFileInvalidKeyException
      * @internal param $string
      * @internal param $ string|array
      * @return void
@@ -139,7 +136,7 @@ class HomesteadConfig {
 	public function addTo($topLevelKey, $newConfigItem)
 	{
 		if (in_array($topLevelKey, $this->validTopLevelConfigKeys) === false) {
-			throw new \InvalidConfigKeyException("Invalid top level key supplied: {$topLevelKey}");
+			throw new \ConfigFileInvalidKeyException("Invalid top level key supplied: {$topLevelKey}");
 		}
 		$this->config[$topLevelKey][] = $newConfigItem;
 	}
@@ -178,9 +175,6 @@ class HomesteadConfig {
 	protected function writeConfigFile()
 	{
 		$bytesWrittenToDisk = file_put_contents($this->configFilePath, $this->configFileContents);
-		if ($bytesWrittenToDisk === false) {
-			throw new \ConfigFileIOException("Config was not saved to file: {$this->configFilePath}");
-		}
 		return $bytesWrittenToDisk;
 	}
 

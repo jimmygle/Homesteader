@@ -85,11 +85,7 @@ class ConfigCommand extends Command {
 	 */
 	protected function homesteadConfigSave()
 	{
-		try {
-			$this->homesteadConfig->save();
-		} catch (Exception $e) {
-			$this->output->writeln("<error>{$e->getMessage()}</error>");
-		}
+		$this->homesteadConfig->save();
 
 		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
 	}
