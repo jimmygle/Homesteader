@@ -1,5 +1,7 @@
 ## Homesteader - Laravel Homestead Toolkit
 
+[![Build Status](https://travis-ci.org/jimmygle/Homesteader.svg?branch=master)](https://travis-ci.org/jimmygle/Homesteader)
+
 Homesteader is a composer package with automation in mind. It's meant to simplify the workflow associated with [Homestead](http://laravel.com/docs/5.0/homestead), and it includes a suite of commands to manipulate Homestead's  configuration file. Down the road it will assist with tasks like updating host machine hosts files, automatic reprovisioning, and fully automated scripting of Homestead configurations that can live in individual projects (think composer.json for Homestead).
 
 ### Why
@@ -10,7 +12,7 @@ Homestead is a great use of a couple [virtualization](http://vagrantup.com/) [to
 This package requires [Composer](http://getcomposer.org) and [Homestead](http://laravel.com/docs/5.0/homestead).
 
 ```ssh
-composer global require "jimmygle/Homesteader=~1.0"
+composer global require "jimmygle/homesteader=~1.0"
 ```
 
 ### Usage

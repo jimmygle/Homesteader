@@ -4,7 +4,7 @@
     "keywords": ["homestead", "laravel", "vagrant"],
     "homepage": "http://github.com/jimmygle/Homesteader",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "bin": ["homesteader"],
     "require": {
         "php": ">=5.5",
