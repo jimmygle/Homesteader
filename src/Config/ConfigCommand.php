@@ -51,7 +51,7 @@ class ConfigCommand extends Command {
      * @throws \MissingValueException
      * @internal param $bool
      * @return string
-     * @todo  refactor this
+     * @todo refactor this... method's doing too much
      */
 	protected function prompt($promptText, $optionKeyOfDefault = null, $isRequired = false)
 	{
@@ -65,7 +65,7 @@ class ConfigCommand extends Command {
             if ($defaultAnswer != false) {
                 $promptText = $promptText . '[' . $defaultAnswer . ']: ';
             }
-            $prompt = new Question($promptText);
+            $prompt = new Question($promptText, $defaultAnswer);
             $answer = $this->questionHelper->ask($this->input, $this->output, $prompt);
         } else {
             $answer = $defaultAnswer;
