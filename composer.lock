@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "944063b2f278c58433c2a495168ff9de",
+    "hash": "df51af57aaa92a5e929785c034552a55",
     "packages": [
         {
             "name": "symfony/console",
@@ -70,12 +70,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "29682f882d6bd3388fab47fbe8cbd3c7ff9ea5ae"
+                "reference": "f6985a14085827f92173b72a7b224dcc448ef3f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/29682f882d6bd3388fab47fbe8cbd3c7ff9ea5ae",
-                "reference": "29682f882d6bd3388fab47fbe8cbd3c7ff9ea5ae",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/f6985a14085827f92173b72a7b224dcc448ef3f5",
+                "reference": "f6985a14085827f92173b72a7b224dcc448ef3f5",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2015-03-07 07:44:26"
+            "time": "2015-03-13 10:36:02"
         }
     ],
     "packages-dev": [
@@ -1070,7 +1070,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5.9"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }
