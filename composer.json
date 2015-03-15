@@ -1,23 +1,32 @@
 {
-	"name": "jimmygle/homesteader",
-	"description": "A laravel homestead config manager.",
-	"version": "0.1.0",
-	"bin": ["homesteader"],
-	"require": {
-		"php": ">=5.4",
-		"symfony/console": "~2.0",
-		"symfony/yaml": "3.0.*@dev"
-	},
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Jimmy Gleason",
-			"email": "jimmygle@gmail.com"
-		}
-	],
-	"autoload": {
-		"psr-4": {
-			"Homesteader\\": "src/"
-		}
-	}
+    "name": "jimmygle/homesteader",
+    "description": "A Laravel Homestead toolkit to help with automation.",
+    "keywords": ["homestead", "laravel", "vagrant"],
+    "homepage": "http://github.com/jimmygle/Homesteader",
+    "license": "MIT",
+    "version": "1.0.0",
+    "bin": ["homesteader"],
+    "require": {
+        "php": ">=5.5",
+        "symfony/console": "~2.0",
+        "symfony/yaml": "~2.6.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.7.*@dev",
+        "mikey179/vfsStream": "~1"
+    },
+    "authors": [
+        {
+            "name": "Jimmy Gleason",
+            "email": "jimmygle@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Homesteader\\Config\\": "src/Config/"
+        },
+        "files": [
+            "src/Exceptions.php"
+        ]
+    }
 }
