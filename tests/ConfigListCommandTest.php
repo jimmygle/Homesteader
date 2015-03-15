@@ -13,7 +13,9 @@ class ConfigListCommandTest extends ConfigSetup {
 
         $command = $application->find('config');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
+        $commandTester->execute([
+            '--file' => $this->homesteadConfigFilePath
+        ]);
 
         $this->assertStringStartsWith(PHP_EOL . 'The config commands allow for easy manipulation of the Homestead config file.', $commandTester->getDisplay());
     }

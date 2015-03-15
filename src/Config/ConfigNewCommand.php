@@ -51,7 +51,7 @@ class ConfigNewCommand extends ConfigCommand {
                 break;
 			default:
 				$helpCommand = $this->getApplication()->find('config:new');
-                $input = new ArrayInput(['key' => 'list']);
+                $input = new ArrayInput(['key' => 'list', '--file' => $input->getOption('file')]);
                 $helpCommand->run($input, $output);
 				break;
 		}
