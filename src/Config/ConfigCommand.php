@@ -32,7 +32,7 @@ class ConfigCommand extends Command {
      * @param OutputInterface $output
      * @internal param $ Symfony\Component\Console\Input\InputInterface
      * @internal param $ Symfony\Component\Console\Output\OutputInterface
-     * @return void;
+     * @return void
      */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
@@ -42,20 +42,44 @@ class ConfigCommand extends Command {
 		$this->questionHelper = $this->getHelper('question');
 	}
 
-	/**
-	 * Prompts for input
-	 *
-	 * @param  string
-	 * @return  string
-	 */
-	protected function prompt($promptText)
+    /**
+     * Prompts for input if interaction enabled with option name default
+     *
+     * @param $promptText
+     * @param string
+     * @param bool $isRequired
+     * @throws \MissingValueException
+     * @internal param $bool
+     * @return string
+     * @todo refactor this... method's doing too much
+     */
+	protected function prompt($promptText, $optionKeyOfDefault = null, $isRequired = false)
 	{
-		$prompt = new Question($promptText);
-		return $this->questionHelper->ask($this->input, $this->output, $prompt);
+        try {
+            $defaultAnswer = $this->input->getOption($optionKeyOfDefault);
+        } catch (\InvalidArgumentException $e) {
+            $defaultAnswer = false;
+        }
+
+        if ($this->input->isInteractive()) {
+            if ($defaultAnswer != false) {
+                $promptText = $promptText . '[' . $defaultAnswer . ']: ';
+            }
+            $prompt = new Question($promptText, $defaultAnswer);
+            $answer = $this->questionHelper->ask($this->input, $this->output, $prompt);
+        } else {
+            $answer = $defaultAnswer;
+        }
+
+        if ($isRequired === true && $answer == false) {
+            throw new \MissingValueException('Value required for prompt: "' . $promptText . '"');
+        }
+
+        return $answer;
 	}
 
 	/**
-	 * Outputs summary of changes and prompts for confirmation
+	 * Outputs summary of changes and prompts for confirmation, or assumes yes if non-interactive
 	 *
 	 * @param  string
 	 * @param  string
@@ -63,9 +87,12 @@ class ConfigCommand extends Command {
 	 */
 	protected function confirmChanges($changeSummary, $confirmationText = 'Continue? [y/n] ')
 	{
-		$this->output->writeln($changeSummary);
-		$confirmation = new ConfirmationQuestion($confirmationText, false);
-		return (bool) $this->questionHelper->ask($this->input, $this->output, $confirmation);
+        if ($this->input->isInteractive()) {
+            $this->output->writeln($changeSummary);
+            $confirmation = new ConfirmationQuestion($confirmationText, false);
+            return (bool) $this->questionHelper->ask($this->input, $this->output, $confirmation);
+        }
+        return true;
 	}
 
     /**

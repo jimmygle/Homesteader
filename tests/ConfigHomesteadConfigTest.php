@@ -82,7 +82,5 @@ class ConfigHomesteadConfigTest extends ConfigSetup {
         new HomesteadConfig($this->homesteadConfigFilePath);
     }
 
-// @todo  Add tests for addTo() method
-// @todo  Add tests for save() method
 
 } 
