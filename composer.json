@@ -13,7 +13,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.7.*@dev",
-        "mikey179/vfsStream": "~1"
+        "mikey179/vfsStream": "~1",
+        "phpmd/phpmd": "@stable"
     },
     "authors": [
         {
