@@ -2,18 +2,28 @@
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Homesteader\Config\HomesteadConfig;
+use Symfony\Component\Console\Question\Question;
 
-class ConfigCommand extends Command {
+class ConfigCommand extends Command
+{
 
-	protected $input;
-	protected $output;
-	protected $homesteadConfig;
-	protected $questionHelper;
+    protected $input;
+    protected $output;
+    protected $homesteadConfig;
+    protected $questionHelper;
+
+    /**
+     * Outputs message of change confirmation being canceled
+     *
+     * @return void
+     */
+    public function outputChangesCanceled()
+    {
+        $this->output->writeln("<info>Changes not applied. Exiting.</info>");
+    }
 
     /**
      * Add command configuration available to all config commands
@@ -34,13 +44,13 @@ class ConfigCommand extends Command {
      * @internal param $ Symfony\Component\Console\Output\OutputInterface
      * @return void
      */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$this->input = $input;
-		$this->output = $output;
-		$this->homesteadConfig = new HomesteadConfig($input->getOption('file'));
-		$this->questionHelper = $this->getHelper('question');
-	}
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->input = $input;
+        $this->output = $output;
+        $this->homesteadConfig = new HomesteadConfig($input->getOption('file'));
+        $this->questionHelper = $this->getHelper('question');
+    }
 
     /**
      * Prompts for input if interaction enabled with option name default
@@ -53,22 +63,12 @@ class ConfigCommand extends Command {
      * @return string
      * @todo refactor this... method's doing too much
      */
-	protected function prompt($promptText, $optionKeyOfDefault = null, $isRequired = false)
-	{
-        try {
-            $defaultAnswer = $this->input->getOption($optionKeyOfDefault);
-        } catch (\InvalidArgumentException $e) {
-            $defaultAnswer = false;
-        }
+    protected function prompt($promptText, $optionKeyOfDefault = null, $isRequired = false)
+    {
+        $answer = $this->getDefaultAnswerFromOption($optionKeyOfDefault);
 
         if ($this->input->isInteractive()) {
-            if ($defaultAnswer != false) {
-                $promptText = $promptText . '[' . $defaultAnswer . ']: ';
-            }
-            $prompt = new Question($promptText, $defaultAnswer);
-            $answer = $this->questionHelper->ask($this->input, $this->output, $prompt);
-        } else {
-            $answer = $defaultAnswer;
+            $answer = $this->displayPromptAndGetAnswerFromInput($promptText, $answer);
         }
 
         if ($isRequired === true && $answer == false) {
@@ -76,45 +76,66 @@ class ConfigCommand extends Command {
         }
 
         return $answer;
-	}
+    }
 
-	/**
-	 * Outputs summary of changes and prompts for confirmation, or assumes yes if non-interactive
-	 *
-	 * @param  string
-	 * @param  string
-	 * @return  bool
-	 */
-	protected function confirmChanges($changeSummary, $confirmationText = 'Continue? [y/n] ')
-	{
+    /**
+     * Gets default value from option if it's set
+     *
+     * @param string
+     * @return mixed
+     */
+    protected function getDefaultAnswerFromOption($option)
+    {
+        try {
+            return $this->input->getOption($option);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Display prompt and get answer from input
+     *
+     * @param string
+     * @param string|bool
+     * @return mixed
+     */
+    protected function displayPromptAndGetAnswerFromInput($promptText, $answer)
+    {
+        if ($answer != false) {
+            $promptText = $promptText . '[' . $answer . ']: ';
+        }
+        $prompt = new Question($promptText, $answer);
+        return $this->questionHelper->ask($this->input, $this->output, $prompt);
+    }
+
+    /**
+     * Outputs summary of changes and prompts for confirmation, or assumes yes if non-interactive
+     *
+     * @param  string
+     * @param  string
+     * @return  bool
+     */
+    protected function confirmChanges($changeSummary, $confirmationText = 'Continue? [y/n] ')
+    {
         if ($this->input->isInteractive()) {
             $this->output->writeln($changeSummary);
             $confirmation = new ConfirmationQuestion($confirmationText, false);
-            return (bool) $this->questionHelper->ask($this->input, $this->output, $confirmation);
+            return (bool)$this->questionHelper->ask($this->input, $this->output, $confirmation);
         }
         return true;
-	}
+    }
 
     /**
-     * Outputs message of change confirmation being canceled
+     * Attempts to save the homestead config file
      *
      * @return void
      */
-    public function outputChangesCanceled()
+    protected function homesteadConfigSave()
     {
-        $this->output->writeln("<info>Changes not applied. Exiting.</info>");
+        $this->homesteadConfig->save();
+
+        $this->output->writeln('<info>Homestead config file successfully updated.</info>');
     }
-
-	/**
-	 * Attempts to save the homestead config file
-	 *
-	 * @return void
-	 */
-	protected function homesteadConfigSave()
-	{
-		$this->homesteadConfig->save();
-
-		$this->output->writeln('<info>Homestead config file successfully updated.</info>');
-	}
 
 }

@@ -3,7 +3,8 @@
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigListCommand extends ConfigCommand {
+class ConfigListCommand extends ConfigCommand
+{
 
     /**
      * Configure command
