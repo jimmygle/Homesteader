@@ -61,7 +61,6 @@ class ConfigCommand extends Command
      * @throws \MissingValueException
      * @internal param $bool
      * @return string
-     * @todo refactor this... method's doing too much
      */
     protected function prompt($promptText, $optionKeyOfDefault = null, $isRequired = false)
     {
