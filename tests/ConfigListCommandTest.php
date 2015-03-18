@@ -2,7 +2,7 @@
 
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Application;
-use Homesteader\Config\ConfigListCommand;
+use Homesteader\Commands\Config\ConfigListCommand;
 
 class ConfigListCommandTest extends ConfigSetup {
 

@@ -10,10 +10,14 @@ else
     require __DIR__.'/../../autoload.php';
 }
 
-$app = new Symfony\Component\Console\Application('Homestead - Homestead Config Manager', '0.1.0');
+$app = new Symfony\Component\Console\Application('Homestead - Homestead Config Manager', '1.0.1');
 
-$app->add(new Homesteader\Config\ConfigListCommand);
-$app->add(new Homesteader\Config\ConfigShowCommand);
-$app->add(new Homesteader\Config\ConfigNewCommand);
+$app->add(new Homesteader\Commands\Config\ConfigListCommand);
+$app->add(new Homesteader\Commands\Config\ConfigShowCommand);
+$app->add(new Homesteader\Commands\Config\ConfigNew\ConfigNewCommand);
+$app->add(new Homesteader\Commands\Config\ConfigNew\ConfigNewFolderCommand);
+$app->add(new Homesteader\Commands\Config\ConfigNew\ConfigNewSiteCommand);
+$app->add(new Homesteader\Commands\Config\ConfigNew\ConfigNewDatabaseCommand);
+$app->add(new Homesteader\Commands\Config\ConfigNew\ConfigNewVariableCommand);
 
 $app->run();

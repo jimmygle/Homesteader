@@ -1,6 +1,6 @@
 <?php require_once __DIR__.'/ConfigSetup.php';
 
-use Homesteader\Config\HomesteadConfig;
+use Homesteader\HomesteadConfig;
 
 class ConfigHomesteadConfigTest extends ConfigSetup {
 

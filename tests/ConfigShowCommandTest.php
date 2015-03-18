@@ -2,7 +2,7 @@
 
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Application;
-use Homesteader\Config\ConfigShowCommand;
+use Homesteader\Commands\Config\ConfigShowCommand;
 
 class ConfigShowCommandTest extends ConfigSetup {
 	

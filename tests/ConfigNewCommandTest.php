@@ -4,8 +4,8 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Application;
-use Homesteader\Config\ConfigNewCommand;
-use Homesteader\Config\HomesteadConfig;
+use Homesteader\Commands\Config\ConfigNew\ConfigNewCommand;
+use Homesteader\HomesteadConfig;
 
 class ConfigNewCommandTest extends ConfigSetup {
 
@@ -22,7 +22,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewFolder()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:folder');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -31,7 +31,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "y\n"
         ));
         $commandTester->execute([
-            'key' => 'folder',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -47,7 +46,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCancelChangesWhenOnNewFolder()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:folder');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -56,7 +55,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "n\n"
         ));
         $commandTester->execute([
-            'key' => 'folder',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -69,10 +67,9 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewFolderWithNoInteraction()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:folder');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'key' => 'folder',
             '--file' => $this->homesteadConfigFilePath,
             '--host' => '/Users/user/Projects/TestAppName',
             '--homestead' => '/home/vagrant/TestAppName'
@@ -90,18 +87,17 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldThrowExceptionIfMissingValues()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:folder');
         $commandTester = new CommandTester($command);
         $this->setExpectedException('MissingValueException', 'Value required for prompt: "Path to host machine (not Homestead) directory: "');
         $commandTester->execute([
-            'key' => 'folder',
             '--file' => $this->homesteadConfigFilePath
         ], ['interactive' => false]);
     }
 
     public function testItShouldCreateNewSite()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:site');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -110,7 +106,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "y\n"
         ));
         $commandTester->execute([
-            'key' => 'site',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -126,10 +121,9 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewSiteWithNoInteraction()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:site');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'key' => 'site',
             '--file' => $this->homesteadConfigFilePath,
             '--domain' => 'test-app.local',
             '--homestead' => '/home/vagrant/test-app'
@@ -147,7 +141,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCancelChangesWhenOnNewSite()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:site');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -156,7 +150,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "n\n"
         ));
         $commandTester->execute([
-            'key' => 'site',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -169,7 +162,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewVariable()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:variable');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -178,7 +171,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "y\n"
         ));
         $commandTester->execute([
-            'key' => 'variable',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -194,10 +186,9 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewVariableWithNoInteraction()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:variable');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'key' => 'variable',
             '--file' => $this->homesteadConfigFilePath,
             '--key' => 'TEST_VAR',
             '--value' => 'test_value'
@@ -215,7 +206,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCancelChangesWhenOnNewVariable()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:variable');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -224,7 +215,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "n\n"
         ));
         $commandTester->execute([
-            'key' => 'variable',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -237,7 +227,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewDatabase()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:database');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -245,7 +235,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "y\n"
         ));
         $commandTester->execute([
-            'key' => 'database',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -260,10 +249,9 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCreateNewDatabaseWithNoInteraction()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:database');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'key' => 'database',
             '--file' => $this->homesteadConfigFilePath,
             '--name' => 'test_db'
         ], ['interactive' => false]);
@@ -279,7 +267,7 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldCancelChangesWhenOnNewDatabase()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:database');
         $commandTester = new CommandTester($command);
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream(
@@ -287,7 +275,6 @@ class ConfigNewCommandTest extends ConfigSetup {
             "n\n"
         ));
         $commandTester->execute([
-            'key' => 'database',
             '--file' => $this->homesteadConfigFilePath
         ]);
 
@@ -300,10 +287,9 @@ class ConfigNewCommandTest extends ConfigSetup {
 
     public function testItShouldHandleInvalidKeyEntry()
     {
-        $command = $this->app->find('config:new');
+        $command = $this->app->find('config:new:asdasdf');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'key' => 'ksdfsl',
             '--file' => $this->homesteadConfigFilePath
         ]);
 

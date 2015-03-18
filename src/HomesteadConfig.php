@@ -1,4 +1,4 @@
-<?php namespace Homesteader\Config;
+<?php namespace Homesteader;
 
 use Symfony\Component\Yaml\Yaml;
 
